@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31829.152
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_cubits", "_cubits\_cubits.csproj", "{B1BE0581-373D-4FD3-BC13-EB6B77302FBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1BE0581-373D-4FD3-BC13-EB6B77302FBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1BE0581-373D-4FD3-BC13-EB6B77302FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1BE0581-373D-4FD3-BC13-EB6B77302FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1BE0581-373D-4FD3-BC13-EB6B77302FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15E57A0D-1A62-47D9-BE78-8A2E0982544B}
+	EndGlobalSection
+EndGlobal
