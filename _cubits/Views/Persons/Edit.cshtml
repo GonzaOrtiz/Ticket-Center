@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<h1>Person</h1>
+<hr />
+<div class="row">
+    <div class="col-md-">
+        <form id="personForm">
+            <input name="Id" type="hidden"/>
+            <div class="d-flex justify-content-around">
+                <div class="card col-12 text-center bg-light align-items-center shadow-lg">
+                    <h4 class="m-3">Edit Passager</h4>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">FirstName</label>
+                                <input  name="firstName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">LastName</label>
+                                <input name="lastName" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Dni</label>
+                                <input name="dni" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input  name="email" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+
+                            <button type="submit" class="btn btn-primary"> Edit</button>
+
+                            <a asp-action="Index">
+                                <input type="button" class="btn btn-danger" value="Back to Index">
+                            </a>
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <br>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        serializeForm = () => {
+            return JSON.stringify({
+                firstName: getInputValue("firstName"),
+                lastName: getInputValue("lastName"),
+                dni: getInputValue("dni"),
+                email: getInputValue("email"),
+            });
+        };
+
+
+        getInputValue = (input) => {
+            let value = $(`#personForm input[name=${input}]`).val();
+
+            if (isNaN(value)) {
+                return value;
+            }
+
+            return parseFloat(value);
+        };
+
+                setInputValue = (input, value) => {
+            $(`#personForm input[name=${input}]`).val(value);
+        };
+
+        setFormValue = (person) => {
+            setInputValue("firstName", person.firstName);
+            setInputValue("lastName", person.lastName);
+            setInputValue("dni", person.dni);
+            setInputValue("email", person.email);
+
+        }
+
+        getPerson = () => {
+            const id = getParameterFromUrl("id");
+            const entityUrl = `/Api/Person/${id}`;
+
+            $.ajax({
+                method: "GET",
+                url: entityUrl
+            }).done((person) => {
+                setFormValue(person);
+            });
+        }
+
+        saveperson = () => {
+            const id = getParameterFromUrl("id");
+            const entityUrl = `/Api/Person/${id}`;
+
+            $.ajax({
+                method: "PUT",
+                url: entityUrl,
+                contentType: "application/json",
+                data: serializeForm(),
+            }).done(() => {
+                redirectToLocation("/persons");
+            })
+        };
+
+        handleSubmit = () => {
+            $("#personForm").on("submit", (event) => {
+                event.preventDefault();
+                saveperson();
+            });
+        }
+
+        $(document).ready(() => {
+            getPerson();
+            handleSubmit();
+        });
+    </script>
+}
