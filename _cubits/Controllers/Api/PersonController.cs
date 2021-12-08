@@ -31,16 +31,17 @@ namespace _cubits.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetById(Guid id)
+        public IActionResult Get(Guid id)
         {
+            var productList = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
+            var product = productList.Where(p => p.Id == id).FirstOrDefault();
 
-            var people = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
+            if (product == null)
+                return NotFound();
 
-            var person = people.Where(x => x.Id == id)
-                                .FirstOrDefault();
-
-            return Ok(people);
+            return Ok(product);
         }
+
 
         [HttpDelete]
         [Route("{id}")]
