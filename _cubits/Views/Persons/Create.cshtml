@@ -8,7 +8,7 @@
 <hr />
 <div class="row">
     <div class="col-md-">
-        <form asp-action="Create" asp-controller="Persons" method="POST">
+        <form id="personForm">
             <div class="d-flex justify-content-around">
                 <div class="card col-12 text-center bg-light align-items-center shadow-lg">
                     <h4 class="m-3">Create Passager</h4>
@@ -17,13 +17,13 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label class="form-label">FirstName</label>
-                                <input asp-for="FirstName" class="form-control">
+                                <input name="firstName" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label class="form-label">LastName</label>
-                                <input  asp-for="LastName" class="form-control">
+                                <input  name="lastName" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -32,13 +32,13 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label class="form-label">Dni</label>
-                                <input  asp-for="Dni" class="form-control">
+                                <input  name="dni" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input  asp-for="Email" class="form-control">
+                                <input  name="email" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-sm-12 text-center">
 
-                            <input type="submit" class="btn btn-primary" value="Create"> &nbsp;
+                         <button type="submit" class="btn btn-primary"> Crear</button> &nbsp;
 
                             <a asp-action="Index">
                                 <input type="button" class="btn btn-danger" value="Back to Index">
@@ -63,8 +63,50 @@
 </div>
 
 
-@section Scripts {
-    @{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
+@section Scripts
+{
+    <script type="text/javascript">
+        serializeForm = () => {
+            var model = {
+                firstName: getInputValue("firstName"),
+                lastName: getInputValue("lastName"),
+                email: getInputValue("email")
+            };
+
+            return JSON.stringify(model);
+        };
+
+        getInputValue = (input) => {
+            let value = $(`#personForm input[name=${input}]`).val();
+
+            if (isNaN(value)) {
+                return value;
+            }
+
+            return parseFloat(value);
+        };
+
+        saveProduct = () => {
+                            console.log('hola')
+            $.ajax({
+                method: "POST",
+                url: "/Api/Person",
+                contentType: "application/json",
+                data: serializeForm(),
+            }).done(() => {
+                redirectToLocation("/persons");
+            })
+        };
+
+        handleSubmit = () => {
+            $("#personForm").on("submit", (event) => {
+                event.preventDefault();
+                saveProduct();
+            });
+        }
+
+        $(document).ready(() => {
+            handleSubmit();
+        });
+    </script>
 }

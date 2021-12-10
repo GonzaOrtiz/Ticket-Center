@@ -1,4 +1,6 @@
-﻿using _cubits.Models;
+﻿using _cubits.Data;
+using _cubits.Data.Models;
+using _cubits.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,32 +16,99 @@ namespace _cubits.Controllers
     {
 
         private readonly IMemoryCache _cache;
+
         private const string CacheKey = "Persons";
-        public PersonController(IMemoryCache cache)
+        private readonly ApplicationDbContext _dbContext;
+
+        public PersonController(ApplicationDbContext dbContext, IMemoryCache cache)
         {
+            _dbContext = dbContext;
             _cache = cache;
         }
+        //public PersonController(e)
+        //{
+        //    _cache = cache;
+        //}
+
+        //[HttpGet]
+        //[Route("")]
+        //public IActionResult GetAll()
+        //{
+        //    var people = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
+
+        //    return Ok(people);
+        //}
 
         [HttpGet]
         [Route("")]
         public IActionResult GetAll()
         {
-            var people = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
+            var personList = _dbContext
+                .Set<PersonModel>()
+                .ToList();
 
-            return Ok(people);
+            var response = personList
+                .Select(l => new Person
+                {
+                    Id = l.Id,
+                    FirstName = l.FirstName,
+                    LastName = l.LastName,
+                    Email = l.Email,
+                    Dni = l.Dni
+                })
+                .ToList();
+
+            return Ok(response);
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult Get(Guid id)
         {
-            var productList = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
-            var product = productList.Where(p => p.Id == id).FirstOrDefault();
+            //var productList = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
+            //var product = productList.Where(p => p.Id == id).FirstOrDefault();
 
-            if (product == null)
+            //if (product == null)
+            //    return NotFound();
+
+            //return Ok(product);
+
+            var person = _dbContext
+                .Set<PersonModel>()
+                .Where(l => l.Id == id)
+                .FirstOrDefault();
+
+            if (person == null)
                 return NotFound();
 
-            return Ok(product);
+            var response = new Person
+            {
+                Id = person.Id,
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                Email = person.Email,
+                Dni = person.Dni
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("")]
+        public IActionResult Post([FromBody] Person personParam)
+        {
+            var person = new PersonModel
+            {
+                FirstName = personParam.FirstName,
+                LastName = personParam.LastName,
+                Email = personParam.Email,
+                Dni = personParam.Dni
+            };
+
+            _dbContext.Add(person);
+            _dbContext.SaveChanges();
+
+            return CreatedAtAction(nameof(Get), new { id = person.Id }, new { id = person.Id });
         }
 
 
