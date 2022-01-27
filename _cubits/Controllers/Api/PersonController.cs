@@ -14,30 +14,12 @@ namespace _cubits.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-
-        private readonly IMemoryCache _cache;
-
-        private const string CacheKey = "Persons";
         private readonly ApplicationDbContext _dbContext;
 
-        public PersonController(ApplicationDbContext dbContext, IMemoryCache cache)
+        public PersonController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _cache = cache;
         }
-        //public PersonController(e)
-        //{
-        //    _cache = cache;
-        //}
-
-        //[HttpGet]
-        //[Route("")]
-        //public IActionResult GetAll()
-        //{
-        //    var people = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
-
-        //    return Ok(people);
-        //}
 
         [HttpGet]
         [Route("")]
@@ -65,13 +47,6 @@ namespace _cubits.Controllers
         [Route("{id}")]
         public IActionResult Get(Guid id)
         {
-            //var productList = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
-            //var product = productList.Where(p => p.Id == id).FirstOrDefault();
-
-            //if (product == null)
-            //    return NotFound();
-
-            //return Ok(product);
 
             var person = _dbContext
                 .Set<PersonModel>()
@@ -116,15 +91,16 @@ namespace _cubits.Controllers
         [Route("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var personList = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
-            var person = personList.Where(p => p.Id == id).FirstOrDefault();
 
+            var person = _dbContext
+               .Set<PersonModel>()
+               .Where(l => l.Id == id)
+               .FirstOrDefault();
             if (person == null)
                 return NotFound();
 
-            personList.Remove(person);
-
-            _cache.Set(CacheKey, personList);
+            _dbContext.Remove(person);
+            _dbContext.SaveChanges();
 
             return Ok(person);
         }
@@ -134,22 +110,20 @@ namespace _cubits.Controllers
         [Route("{id}")]
         public IActionResult Update(Guid id, [FromBody] Person model)
         {
-            var persontList = _cache.Get<List<Person>>(CacheKey) ?? new List<Person>();
-            var person = persontList.Where(p => p.Id == id).FirstOrDefault();
-
+            var person = _dbContext
+           .Set<PersonModel>()
+           .Where(l => l.Id == id)
+           .FirstOrDefault();
             if (person == null)
                 return NotFound();
-
-            persontList.Remove(person);
 
             person.FirstName = model.FirstName;
             person.LastName = model.LastName;
             person.Dni = model.Dni;
             person.Email = model.Email;
 
-            persontList.Add(person);
-
-            _cache.Set(CacheKey, persontList);
+            _dbContext.Update(person);
+            _dbContext.SaveChanges();
 
             return Ok();
         }

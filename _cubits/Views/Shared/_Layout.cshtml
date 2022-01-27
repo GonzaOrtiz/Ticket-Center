@@ -6,6 +6,8 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"></script>
 </head>
 <body>
     <header>
@@ -22,8 +24,11 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Tickets" asp-action="Index">Tickets</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Origin" asp-action="Index">Origins</a>
                         </li>
+@*                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Tickets" asp-action="Index">Tickets</a>
+                        </li>*@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Persons" asp-action="Index">Passagers</a>
                         </li>

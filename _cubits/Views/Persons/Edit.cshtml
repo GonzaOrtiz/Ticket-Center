@@ -71,7 +71,7 @@
             return JSON.stringify({
                 firstName: getInputValue("firstName"),
                 lastName: getInputValue("lastName"),
-                dni: getInputValue("dni"),
+                dni: getInputValue("dni").toString(),
                 email: getInputValue("email"),
             });
         };

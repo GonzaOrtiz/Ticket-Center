@@ -1,5 +1,4 @@
-﻿@model _cubits.Models.Person
-
+﻿
 @{
     ViewData["Title"] = "Create";
 }
@@ -70,6 +69,7 @@
             var model = {
                 firstName: getInputValue("firstName"),
                 lastName: getInputValue("lastName"),
+                dni: getInputValue("dni").toString(),
                 email: getInputValue("email")
             };
 
