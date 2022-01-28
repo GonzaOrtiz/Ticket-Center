@@ -2,7 +2,7 @@
 
 namespace _cubits.Controllers
 {
-    public class OriginController : Controller
+    public class TicketController : Controller
     {
         public IActionResult Index()
         {

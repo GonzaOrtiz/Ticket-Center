@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Origin</h1>
+<hr />
+<div class="row" id="counter">
+    <div class="col-md-">
+        <form v-on:submit.prevent="submitForm">
+            <div class="d-flex justify-content-around">
+                <div class="card col-12 text-center bg-light align-items-center shadow-lg">
+                    <h4 class="m-3">Update Origin</h4>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-6">
+                                <label class="form-label">Description</label>
+                                <input v-model="origin.description" class="form-control">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                         <button type="submit" class="btn btn-primary"> Update</button> &nbsp;
+                            <a asp-action="Index">
+                                <input type="button" class="btn btn-danger" v-on:click="redirecToIndex" value="Back to Index">
+                            </a>
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <br>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+<script>
+const Counter = {
+  data() {
+    return {
+      idOrigin:  getCookie('IdOrigin'),
+      origin:{
+          id: null,
+          description: null,
+      },
+      getDataById: null,
+    }
+  },
+    methods: {
+      async pullGetOriginById() {
+        await axios.get('https://localhost:44366/' + 'api/origin/' + this.idOrigin).then((result) => {
+            this.getByIdData = result.data;
+            this.origin.id = this.getByIdData.id;
+            this.origin.description = this.getByIdData.description;
+        }).catch((error) => {
+            console.log(error);
+            this.errored = true;
+        });
+      },
+     async submitForm() {
+         await axios.put('https://localhost:44366/' + 'api/origin/' + this.origin.id , this.origin).then((result) => {
+             this.redirecToIndex();
+         }).catch((error) => {
+             console.log(error);
+             this.errored = true;
+         });
+     },
+     redirecToIndex() {
+        return window.location.replace("/origin");
+    }
+  },
+  created(){
+    this.pullGetOriginById();
+  },
+}
+
+Vue.createApp(Counter).mount('#counter')
+</script>
+}

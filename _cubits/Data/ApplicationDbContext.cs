@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using _cubits.Models;
 
 namespace _cubits.Data
 {
@@ -17,5 +18,6 @@ namespace _cubits.Data
 
             base.OnModelCreating(builder);
         }
+        public DbSet<_cubits.Models.Destination> Destiny { get; set; }
     }
 }

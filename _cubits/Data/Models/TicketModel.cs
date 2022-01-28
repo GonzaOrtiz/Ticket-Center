@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace _cubits.Models
+namespace _cubits.Data.Models
 {
-    public class Ticket
+    public class TicketModel
     {
         public Guid Id { get; set; }
         public DateTime Date { get; set; }
@@ -11,6 +11,5 @@ namespace _cubits.Models
         public string OriginProperty { get; set; }
         public string DestinationProperty { get; set; }
         public string PersonProperty { get; set; }
-
     }
 }

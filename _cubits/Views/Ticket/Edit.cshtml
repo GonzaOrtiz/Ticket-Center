@@ -1,0 +1,174 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Ticket</h1>
+<hr />
+<div class="row" id="TicketCounter">
+    <div class="col-md-">
+        <form v-on:submit.prevent="submitForm">
+            <div class="d-flex justify-content-around">
+                <div class="card col-12 text-center bg-light align-items-center shadow-lg">
+                    <h4 class="m-3">Update New Ticket</h4>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" v-model="Ticket.date" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Seat Number</label>
+                                <input type="number" v-model="Ticket.seatNumber" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Price</label>
+                                <input type="number" v-model="Ticket.price" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Origin</label>
+                                <select v-model="Ticket.originProperty"class="form-control">
+                                    <option v-for="origin in originArray" :key="originArray" v-bind:value="origin.description">
+                                        {{origin.description}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Destination</label>
+                                <select v-model="Ticket.destinationProperty"class="form-control">
+                                    <option v-for="destination in destinationArray" :key="destinationArray" v-bind:value="destination.description">
+                                        {{destination.description}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Passager</label>
+                                <select v-model="Ticket.personProperty"class="form-control">
+                                    <option v-for="person in personArray" :key="destinationArray" v-bind:value="person.lastName">
+                                        {{person.firstName}} {{person.lastName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <button type="submit" class="btn btn-primary"> Update</button> &nbsp;
+                            <a asp-action="Index">
+                                <input type="button" class="btn btn-danger" v-on:click="redirecToIndex" value="Back to Index">
+                            </a>
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <br>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+<script>
+    const TicketCounter= {
+      data() {
+        return {
+         idTicket:  getCookie('IdTicket'),
+          Ticket:{
+              date: null,
+              seatNumber: null,
+              price: null,
+              originProperty: null,
+              destinationProperty: null,
+              personProperty: null
+          },
+          originArray: null,
+          destinationArray: null,
+          personArray: null,
+          getByIdData: null,
+        }
+      },
+      methods: {
+         async submitForm() {
+             await axios.put('https://localhost:44366/' + 'api/Ticket/'+ this.idTicket, this.Ticket).then((result) => {
+                 this.redirecToIndex();
+             }).catch((error) => {
+                 console.log(error);
+                 this.errored = true;
+             });
+         },
+      async pullGetTicketById() {
+        await axios.get('https://localhost:44366/' + 'api/Ticket/' + this.idTicket).then((result) => {
+            this.getByIdData = result.data;
+            this.Ticket.id = this.getByIdData.id;
+            this.Ticket.seatNumber = this.getByIdData.seatNumber;
+            this.Ticket.price = this.getByIdData.price;
+            this.Ticket.originProperty = this.getByIdData.originProperty;
+            this.Ticket.destinationProperty = this.getByIdData.destinationProperty;
+            this.Ticket.personProperty = this.getByIdData.personProperty;
+            this.Ticket.date = this.getByIdData.date;
+
+        }).catch((error) => {
+            console.log(error);
+            this.errored = true;
+        });
+      },
+         async pullGetAllOrigins() {
+             await axios.get('https://localhost:44366/' + 'api/Origin').then((result) => {
+                 this.originArray = result.data;
+             }).catch((error) => {
+                 console.log(error);
+                 this.errored = true;
+             });
+         },
+         async pullGetAllDestinations() {
+             await axios.get('https://localhost:44366/' + 'api/Destination').then((result) => {
+                 this.destinationArray = result.data;
+             }).catch((error) => {
+                 console.log(error);
+                 this.errored = true;
+             });
+         },
+         async pullGetAllPersons() {
+             await axios.get('https://localhost:44366/' + 'api/Person').then((result) => {
+                 this.personArray = result.data;
+             }).catch((error) => {
+                 console.log(error);
+                 this.errored = true;
+             });
+         },
+         redirecToIndex() {
+            return window.location.replace("/Ticket");
+        }
+      },
+      created(){
+          this.pullGetAllOrigins();
+          this.pullGetAllDestinations();
+          this.pullGetAllPersons();
+          this.pullGetTicketById();
+
+      }
+    }
+
+    Vue.createApp(TicketCounter).mount('#TicketCounter')
+</script>
+}
